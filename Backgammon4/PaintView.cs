@@ -227,8 +227,6 @@ namespace Backgammon4
         }
         private void TurnHandler(int i, int j)
         {
-            //Roll();
-            RollDice();
             if (_previousI == -1 && _previousJ == -1)
             {
                 // this is the first click of the turn
@@ -239,6 +237,8 @@ namespace Backgammon4
                         // If it is player 1's turn
                         if (board[i, j].Peek() == true)
                         {
+                            RollDice();
+
                             TurnArray[0] = i;
                             TurnArray[1] = j;
 
@@ -248,6 +248,7 @@ namespace Backgammon4
                     }
                     else
                     {
+
                         // If it is player 2's turn
                         if (board[i, j].Peek() == false)
                         {
@@ -265,15 +266,91 @@ namespace Backgammon4
                 if (board[i, j].Count == 0)
                 {
                     // If the destination is empty
-                    //    if (IsValidMove(i,j,_previousI,_previousJ, _currentTurn)
-                    var piece = board[_previousI, _previousJ].Pop();
-                    board[i, j].Push(piece);
-                    _currentTurn = _currentTurn == 1 ? 2 : 1;
-                    _previousI = -1;
-                    _previousJ = -1;
-                    Invalidate();
+                    if (IsValidMove(TurnArray[2], TurnArray[3], TurnArray[0], TurnArray[1], _currentTurn)){
+                        var piece = board[_previousI, _previousJ].Pop();
+                        board[i, j].Push(piece);
+                        _currentTurn = _currentTurn == 1 ? 2 : 1;
+                        _previousI = -1;
+                        _previousJ = -1;
+                        Invalidate();
+                    }
+                    }
+                }
+        }
+        private bool IsValidMove(int destI, int destJ, int srcI, int srcJ, int player)
+        {
+            int[] RollArray = new int[2]; // create an array of size 2 to hold the two dice values
+            RollArray[0] = dice.Dice1; // assign the value of the first die to the first element in the array
+            RollArray[1] = dice.Dice2; // assign the value of the second die to the second element in the array
+
+            // Check if the destination is within the bounds of the board
+            if (destI < 0 || destI > 1 || destJ < 0 || destJ > 11)
+            {
+                return false;
+            }
+
+            // Check if the source and destination are the same
+            if (destI == srcI && destJ == srcJ)
+            {
+                return false;
+            }
+
+            // Check if the player is moving their own piece
+            if (player == 1 && board[srcI, srcJ].Peek() == false)
+            {
+                return false;
+            }
+            else if (player == 2 && board[srcI, srcJ].Peek() == true)
+            {
+                return false;
+            }
+
+            // Check if the destination is empty or has pieces of the same color
+            if (board[destI, destJ].Count > 1 && board[destI, destJ].Peek() == board[srcI, srcJ].Peek())
+            {
+                return false;
+            }
+
+            // Check if the player rolled the right number to move to the destination
+            int numSteps = Math.Abs(destJ - srcJ);
+            if (board[srcI, srcJ].Peek() == true && player == 1)
+            {
+                numSteps = 11 - destJ + srcJ;
+            }
+            else if (board[srcI, srcJ].Peek() == false && player == 2)
+            {
+                numSteps = destJ + 12 - srcJ;
+            }
+            if (!RollArray.Contains(numSteps))
+            {
+                return false;
+            }
+
+            // Check if the move is valid based on the direction of movement
+            if (board[srcI, srcJ].Peek() == true)
+            {
+                if (destI == srcI - numSteps && destJ <= 5)
+                {
+                    return true;
+                }
+                else if (destI == srcI + numSteps && destJ >= 6)
+                {
+                    return true;
                 }
             }
+            else
+            {
+                if (destI == srcI + numSteps && destJ >= 6)
+                {
+                    return true;
+                }
+                else if (destI == srcI - numSteps && destJ <= 5)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         public bool canPress(int i, int j, bool player)
         {
@@ -290,74 +367,7 @@ namespace Backgammon4
                 return false;
             }
         }
-        private bool IsValidMove(int i1, int j1, int i2, int j2, int turn)
-        {
-            int dicesum = dicearray[0] + dicearray[1];
-            int direction;
-            if (turn == 1)
-            {
-                direction = 1;
-            }
-            else if (turn == 2)
-            {
-                direction = 2;
-
-            }// there is a problem with j2 and j1 in this case. the seloutin is to give it a nukber from 1 - 24
-            int real1 = RealNumbers(i1, j1); int real2 = RealNumbers(i2, j2);
-            int diff = Math.Abs(real2 - real1);
-            if (diff > dicesum)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool IsValidMoved(int i1, int j1, int i2, int j2, int diceResult)
-        {
-            // check if the starting point is within the board boundaries
-            if (i1 < 0 || i1 > 1 || j1 < 0 || j1 > 11)
-            {
-                return false;
-            }
-
-            // check if the destination point is within the board boundaries
-            if (i2 < 0 || i2 > 1 || j2 < 0 || j2 > 11)
-            {
-                return false;
-            }
-            int direction = i1 == 0 ? 1 : -1;
-            if (i1 == i2)
-            {
-                int diff = Math.Abs(j2 - j1);
-                // check if the difference between the starting and ending coordinates is less than the dice roll result
-                if (diff > diceResult)
-                {
-                    return false;
-                }
-                // check if the move is diagonal
-                for (int j = j1 + direction; j != j2; j += direction)
-                {
-                    if (board[i1, j].Count > 0)
-                    {
-                        return false;
-                    }
-                }
-            }
-            else if (i1 == 0 && i2 == 1 && j1 + diceResult == 11)
-            {
-                return true;
-            }
-            else if (i1 == 1 && i2 == 0 && j1 - diceResult == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-            return true;
-        }
-
+       
         public PaintView(Context context)
        : base(context)
         {
