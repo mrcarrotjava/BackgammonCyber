@@ -25,7 +25,14 @@ namespace Backgammon4
         Context context;
         White white;
         Black black;
+        //check circle
 
+        /// <TurnCommit>
+        int circleCenterX = 2270;
+        int circleCenterY = 541;
+        int circleRadius = 139;
+        bool isTouched = false;
+        /// </TurnCommit>
         private Dice dice;
         private Bitmap[] diceFaces; // bitmaps for each dice face
 
@@ -69,148 +76,167 @@ namespace Backgammon4
         }
         public override bool OnTouchEvent(MotionEvent e)
         {
-            _touchX = e.GetX();
-            _touchY = e.GetY();
-            int i = 0, j = 0;
-            switch (e.Action)
+            if (e.Action == MotionEventActions.Down)
             {
-                case MotionEventActions.Down:
-                    // Determine the location on the board that was touched
-                    if (_touchY >= 16 && _touchY <= 438) // top!!!
-                    {
-                        i = 0;
-                        if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
-                        {
-                            j = 0;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
-                        {
-                            j = 1;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
-                        {
-                            j = 2;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
-                        {
-                            j = 3;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
-                        {
-                            j = 4;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
-                        {
-                            j = 5;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1091 && _touchX >= 956) //[0,6]
-                        {
-                            j = 6;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 954 && _touchX >= 817) //[0,7]
-                        {
-                            j = 7;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 815 && _touchX >= 679) //[0,8]
-                        {
-                            j = 8;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 678 && _touchX >= 544) //[0,9]
-                        {
-                            j = 9;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 543 && _touchX >= 403) //[0,10]
-                        {
-                            j = 10;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 401 && _touchX >= 265) //[0,10]
-                        {
-                            j = 11;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                    }
-                    else if (_touchY >= 577 && _touchY <= 999)
-                    {
-                        i = 1;
-                        if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
-                        {
-                            j = 0;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
-                        {
-                            j = 1;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
-                        {
-                            j = 2;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
-                        {
-                            j = 3;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
-                        {
-                            j = 4;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
-                        {
-                            j = 5;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 1091 && _touchX >= 956) //[0,6]
-                        {
-                            j = 6;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 954 && _touchX >= 817) //[0,7]
-                        {
-                            j = 7;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 815 && _touchX >= 679) //[0,8]
-                        {
-                            j = 8;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 678 && _touchX >= 544) //[0,9]
-                        {
-                            j = 9;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 543 && _touchX >= 403) //[0,10]
-                        {
-                            j = 10;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                        if (_touchX <= 401 && _touchX >= 265) //[0,10]
-                        {
-                            j = 11;
-                            Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                        }
-                    }
+                _touchX = e.GetX();
+                _touchY = e.GetY();
+                double distanceSquared = Math.Pow(_touchX - circleCenterX, 2) + Math.Pow(_touchY - circleCenterY, 2);
+                bool isWithinCircle = distanceSquared <= Math.Pow(circleRadius, 2);
+                Console.WriteLine($"distanceSquared: {distanceSquared}, isWithinCircle: {isWithinCircle}");
+                if (isWithinCircle)
+                {
+                    // Set the flag to true
+                    isTouched = true;
+                    return true;
+                }
+                else
+                {
+                    // Reset the flag to false
+                    isTouched = false;
 
-                    TurnHandler(i, j);
-                    break;
+                }
+                int i = 0, j = 0;
+                switch (e.Action)
+                {
+                    case MotionEventActions.Down:
+                        // Determine the location on the board that was touched
+                        if (_touchY >= 16 && _touchY <= 438) // top!!!
+                        {
+                            i = 0;
+                            if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
+                            {
+                                j = 0;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
+                            {
+                                j = 1;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
+                            {
+                                j = 2;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
+                            {
+                                j = 3;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
+                            {
+                                j = 4;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
+                            {
+                                j = 5;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1091 && _touchX >= 956) //[0,6]
+                            {
+                                j = 6;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 954 && _touchX >= 817) //[0,7]
+                            {
+                                j = 7;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 815 && _touchX >= 679) //[0,8]
+                            {
+                                j = 8;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 678 && _touchX >= 544) //[0,9]
+                            {
+                                j = 9;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 543 && _touchX >= 403) //[0,10]
+                            {
+                                j = 10;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 401 && _touchX >= 265) //[0,10]
+                            {
+                                j = 11;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                        }
+                        else if (_touchY >= 577 && _touchY <= 999)
+                        {
+                            i = 1;
+                            if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
+                            {
+                                j = 0;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
+                            {
+                                j = 1;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
+                            {
+                                j = 2;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
+                            {
+                                j = 3;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
+                            {
+                                j = 4;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
+                            {
+                                j = 5;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 1091 && _touchX >= 956) //[0,6]
+                            {
+                                j = 6;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 954 && _touchX >= 817) //[0,7]
+                            {
+                                j = 7;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 815 && _touchX >= 679) //[0,8]
+                            {
+                                j = 8;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 678 && _touchX >= 544) //[0,9]
+                            {
+                                j = 9;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 543 && _touchX >= 403) //[0,10]
+                            {
+                                j = 10;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                            if (_touchX <= 401 && _touchX >= 265) //[0,10]
+                            {
+                                j = 11;
+                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
+                            }
+                        }
+
+                        TurnHandler(i, j);
+                        break;
+                }
             }
-            return true;
-        }
-        private int RealNumbers(int i, int j)
+                return true;
+                
+            }
+            private int RealNumbers(int i, int j)
         {
             if (i == 0)
             {
@@ -227,6 +253,14 @@ namespace Backgammon4
         }
         private void TurnHandler(int i, int j)
         {
+            if (isTouched == true)
+            {
+                _currentTurn = _currentTurn == 1 ? 2 : 1;
+                _previousI = -1;
+                _previousJ = -1;
+                isTouched = false;
+                Invalidate();
+            }
             if (_previousI == -1 && _previousJ == -1)
             {
                 // this is the first click of the turn
@@ -266,14 +300,12 @@ namespace Backgammon4
                 if (board[i, j].Count == 0)
                 {
                     // If the destination is empty
-                    if (IsValidMove(TurnArray[2], TurnArray[3], TurnArray[0], TurnArray[1], _currentTurn)){
+                  //  if (IsValidMove(TurnArray[2], TurnArray[3], TurnArray[0], TurnArray[1], _currentTurn)){
                         var piece = board[_previousI, _previousJ].Pop();
                         board[i, j].Push(piece);
-                        _currentTurn = _currentTurn == 1 ? 2 : 1;
-                        _previousI = -1;
-                        _previousJ = -1;
-                        Invalidate();
-                    }
+                  
+                    Invalidate();
+                   // }
                     }
                 }
         }
