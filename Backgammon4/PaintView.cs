@@ -35,7 +35,11 @@ namespace Backgammon4
         /// </TurnCommit>
         private Dice dice;
         private Bitmap[] diceFaces; // bitmaps for each dice face
-
+        private int selectedRow = -1;
+        private int selectedCol = -1;
+        private bool sourceSelected = false;
+        private bool currentTurn = true;
+      
         private float[] dicePositions = new float[] { 1700, 340, 1500, 340, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000 };
         // x and y positions of each dice
         private float _touchX;
@@ -52,10 +56,12 @@ namespace Backgammon4
         int click_one;
         int click_two;
         bool isWhite;
-        private int _currentTurn = 1; // 1 for white, 2 for black
+        private bool _currentTurn = true; // true for white, false for black
         private bool animationRunning = false;
         private int currentDice1Face = 0;
         private int currentDice2Face = 0;
+   
+        private bool gameOver = false;
 
         private int[] TurnArray = new int[4]; // this array represent have four parameters that represent parts of the turn.
         //the first two represent the x and y of the new touched location and last two represet the second touch x and y
@@ -73,333 +79,10 @@ namespace Backgammon4
         };
             dice = new Dice(diceFaces);
 
-        }
-        public override bool OnTouchEvent(MotionEvent e)
-        {
-            if (e.Action == MotionEventActions.Down)
-            {
-                _touchX = e.GetX();
-                _touchY = e.GetY();
-                double distanceSquared = Math.Pow(_touchX - circleCenterX, 2) + Math.Pow(_touchY - circleCenterY, 2);
-                bool isWithinCircle = distanceSquared <= Math.Pow(circleRadius, 2);
-                Console.WriteLine($"distanceSquared: {distanceSquared}, isWithinCircle: {isWithinCircle}");
-                if (isWithinCircle)
-                {
-                    // Set the flag to true
-                    isTouched = true;
-                    return true;
-                }
-                else
-                {
-                    // Reset the flag to false
-                    isTouched = false;
+        }        
 
-                }
-                int i = 0, j = 0;
-                switch (e.Action)
-                {
-                    case MotionEventActions.Down:
-                        // Determine the location on the board that was touched
-                        if (_touchY >= 16 && _touchY <= 438) // top!!!
-                        {
-                            i = 0;
-                            if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
-                            {
-                                j = 0;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
-                            {
-                                j = 1;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
-                            {
-                                j = 2;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
-                            {
-                                j = 3;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
-                            {
-                                j = 4;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
-                            {
-                                j = 5;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1091 && _touchX >= 956) //[0,6]
-                            {
-                                j = 6;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 954 && _touchX >= 817) //[0,7]
-                            {
-                                j = 7;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 815 && _touchX >= 679) //[0,8]
-                            {
-                                j = 8;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 678 && _touchX >= 544) //[0,9]
-                            {
-                                j = 9;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 543 && _touchX >= 403) //[0,10]
-                            {
-                                j = 10;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 401 && _touchX >= 265) //[0,10]
-                            {
-                                j = 11;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                        }
-                        else if (_touchY >= 577 && _touchY <= 999)
-                        {
-                            i = 1;
-                            if ((_touchX <= 2045 && _touchX >= 1907)) // [0,0]
-                            {
-                                j = 0;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1906 && _touchX >= 1770) //[0,1]
-                            {
-                                j = 1;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1769 && _touchX >= 1632) //[0,2]
-                            {
-                                j = 2;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1631 && _touchX >= 1494) //[0,3]
-                            {
-                                j = 3;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1493 && _touchX >= 1356) //[0,4]
-                            {
-                                j = 4;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1355 && _touchX >= 1218) //[0,5]
-                            {
-                                j = 5;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 1091 && _touchX >= 956) //[0,6]
-                            {
-                                j = 6;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 954 && _touchX >= 817) //[0,7]
-                            {
-                                j = 7;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 815 && _touchX >= 679) //[0,8]
-                            {
-                                j = 8;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 678 && _touchX >= 544) //[0,9]
-                            {
-                                j = 9;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 543 && _touchX >= 403) //[0,10]
-                            {
-                                j = 10;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                            if (_touchX <= 401 && _touchX >= 265) //[0,10]
-                            {
-                                j = 11;
-                                Toast.MakeText(this.context, j.ToString(), ToastLength.Short).Show();
-                            }
-                        }
 
-                        TurnHandler(i, j);
-                        break;
-                }
-            }
-                return true;
-                
-            }
-            private int RealNumbers(int i, int j)
-        {
-            if (i == 0)
-            {
-                return j + 1; // to make it without zero i added 1 
-            }
-            if (i == 1)
-            {
-                return j + 13;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        private void TurnHandler(int i, int j)
-        {
-            if (isTouched == true)
-            {
-                _currentTurn = _currentTurn == 1 ? 2 : 1;
-                _previousI = -1;
-                _previousJ = -1;
-                isTouched = false;
-                Invalidate();
-            }
-            if (_previousI == -1 && _previousJ == -1)
-            {
-                // this is the first click of the turn
-                if (board[i, j].Count > 0)
-                {
-                    if (_currentTurn == 1)
-                    {
-                        // If it is player 1's turn
-                        if (board[i, j].Peek() == true)
-                        {
-                            RollDice();
 
-                            TurnArray[0] = i;
-                            TurnArray[1] = j;
-
-                            _previousI = i;
-                            _previousJ = j;
-                        }
-                    }
-                    else
-                    {
-
-                        // If it is player 2's turn
-                        if (board[i, j].Peek() == false)
-                        {
-                            _previousI = i;
-                            _previousJ = j;
-                            TurnArray[2] = i;
-                            TurnArray[3] = j;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // this is the second click of the turn
-                if (board[i, j].Count == 0)
-                {
-                    // If the destination is empty
-                  //  if (IsValidMove(TurnArray[2], TurnArray[3], TurnArray[0], TurnArray[1], _currentTurn)){
-                        var piece = board[_previousI, _previousJ].Pop();
-                        board[i, j].Push(piece);
-                  
-                    Invalidate();
-                   // }
-                    }
-                }
-        }
-        private bool IsValidMove(int destI, int destJ, int srcI, int srcJ, int player)
-        {
-            int[] RollArray = new int[2]; // create an array of size 2 to hold the two dice values
-            RollArray[0] = dice.Dice1; // assign the value of the first die to the first element in the array
-            RollArray[1] = dice.Dice2; // assign the value of the second die to the second element in the array
-
-            // Check if the destination is within the bounds of the board
-            if (destI < 0 || destI > 1 || destJ < 0 || destJ > 11)
-            {
-                return false;
-            }
-
-            // Check if the source and destination are the same
-            if (destI == srcI && destJ == srcJ)
-            {
-                return false;
-            }
-
-            // Check if the player is moving their own piece
-            if (player == 1 && board[srcI, srcJ].Peek() == false)
-            {
-                return false;
-            }
-            else if (player == 2 && board[srcI, srcJ].Peek() == true)
-            {
-                return false;
-            }
-
-            // Check if the destination is empty or has pieces of the same color
-            if (board[destI, destJ].Count > 1 && board[destI, destJ].Peek() == board[srcI, srcJ].Peek())
-            {
-                return false;
-            }
-
-            // Check if the player rolled the right number to move to the destination
-            int numSteps = Math.Abs(destJ - srcJ);
-            if (board[srcI, srcJ].Peek() == true && player == 1)
-            {
-                numSteps = 11 - destJ + srcJ;
-            }
-            else if (board[srcI, srcJ].Peek() == false && player == 2)
-            {
-                numSteps = destJ + 12 - srcJ;
-            }
-            if (!RollArray.Contains(numSteps))
-            {
-                return false;
-            }
-
-            // Check if the move is valid based on the direction of movement
-            if (board[srcI, srcJ].Peek() == true)
-            {
-                if (destI == srcI - numSteps && destJ <= 5)
-                {
-                    return true;
-                }
-                else if (destI == srcI + numSteps && destJ >= 6)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if (destI == srcI + numSteps && destJ >= 6)
-                {
-                    return true;
-                }
-                else if (destI == srcI - numSteps && destJ <= 5)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        public bool canPress(int i, int j, bool player)
-        {
-            if (board[i, j].Peek() == player)
-            {
-                return true;
-            }
-            if (board[i, j].Count < 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-       
         public PaintView(Context context)
        : base(context)
         {
@@ -432,8 +115,110 @@ namespace Backgammon4
 
 
         }
+        public override bool OnTouchEvent(MotionEvent e)
+        {
+            if (e.Action == MotionEventActions.Down)
+            {
+                float touchX = e.GetX();
+                float touchY = e.GetY();
 
+                if (IsWithinCircle(touchX, touchY))
+                {
+                    if (sourceSelected && IsValidMove(selectedRow, selectedCol, GetRowFromTouch(touchY), GetColFromTouch(touchX), _currentTurn))
+                    {
+                        TurnHandler(GetRowFromTouch(touchY), GetColFromTouch(touchX));
+                        sourceSelected = false;
+                    }
+                }
+                else
+                {
+                    int i = GetRowFromTouch(touchY);
+                    int j = GetColFromTouch(touchX);
+                    if (i != -1 && j != -1 && board[i, j].Count > 0 && board[i, j].Peek() == _currentTurn)
+                    {
+                        sourceSelected = true;
+                        selectedRow = i;
+                        selectedCol = j;
+                    }
+                }
+            }
+            return true;
+        }
 
+        private int GetRowFromTouch(float touchY)
+        {
+            int row = -1;
+            if (touchY >= 16 && touchY <= 438) // top row
+            {
+                row = 0;
+            }
+            else if (touchY >= 577 && touchY <= 999) // bottom row
+            {
+                row = 1;
+            }
+            return row;
+        }
+
+        private int GetColFromTouch(float touchX)
+        {
+            int col = -1;
+            if (touchX >= 2400 && touchX <= 2263) // rightmost column
+            {
+                col = 0;
+            }
+            else if (touchX >= 2262 && touchX <= 2125)
+            {
+                col = 1;
+            }
+            else if (touchX >= 2124 && touchX <= 1987)
+            {
+                col = 2;
+            }
+            else if (touchX >= 1986 && touchX <= 1849)
+            {
+                col = 3;
+            }
+            else if (touchX >= 1848 && touchX <= 1711)
+            {
+                col = 4;
+            }
+            else if (touchX >= 1710 && touchX <= 1573)
+            {
+                col = 5;
+            }
+            else if (touchX >= 1572 && touchX <= 1437)
+            {
+                col = 6;
+            }
+            else if (touchX >= 1436 && touchX <= 1299)
+            {
+                col = 7;
+            }
+            else if (touchX >= 1298 && touchX <= 1161)
+            {
+                col = 8;
+            }
+            else if (touchX >= 1160 && touchX <= 1023)
+            {
+                col = 9;
+            }
+            else if (touchX >= 1022 && touchX <= 887)
+            {
+                col = 10;
+            }
+            else if (touchX >= 886 && touchX <= 749) // leftmost column
+            {
+                col = 11;
+            }
+            return col;
+        }
+
+        private bool IsWithinCircle(float touchX, float touchY)
+        {
+            double distanceSquared = Math.Pow(touchX - circleCenterX, 2) + Math.Pow(touchY - circleCenterY, 2);
+            bool isWithinCircle = distanceSquared <= Math.Pow(circleRadius, 2);
+            return isWithinCircle;
+        }
 
         protected override void OnDraw(Canvas canvas)
         {
@@ -451,12 +236,160 @@ namespace Backgammon4
                 DrawDice(canvas, dice.DicePositions[2], dice.DicePositions[3], dice.GetDice2Face());
             }
         }
+        private bool HasWhiteCheckersOnBar()
+        {
+            return board[0, 6].Count > 0;
+        }
+
+        private bool HasBlackCheckersOnBar()
+        {
+            return board[1, 6].Count > 0;
+        }
+
+        private bool IsWinner(bool player)
+        {
+            int checkersOff = 0;
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 12; j++)
+                {
+                    if (board[i, j].Count > 0 && board[i, j].Peek() == player)
+                    {
+                        if (player == true && i == 0)
+                        {
+                            checkersOff += board[i, j].Count;
+                        }
+                        else if (player == false && i == 1)
+                        {
+                            checkersOff += board[i, j].Count;
+                        }
+                    }
+                }
+            }
+            return checkersOff == 15;
+        }
+
+        private void ShowBarMessage()
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(Context);
+            alert.SetTitle("Bar message");
+            alert.SetMessage("You have a checker on the bar.");
+            alert.SetPositiveButton("OK", (senderAlert, args) => {
+                // continue game
+            });
+
+            Dialog dialog = alert.Create();
+            dialog.Show();
+        }
+
+    
+
         private void DrawDice(Canvas canvas, int x, int y, Bitmap diceface)
         {
             if (diceface != null && !diceface.IsRecycled)
             {
 
                 canvas.DrawBitmap(diceface, x, y, null);
+            }
+        }
+        private bool IsValidMove(int sourceI, int sourceJ, int destI, int destJ, bool currentTurn)
+        {
+            if (board[destI, destJ].Count > 1)
+            {
+                return false; // cannot move to a point with two or more checkers
+            }
+
+            if (board[destI, destJ].Count == 1 && board[destI, destJ].Peek() != currentTurn)
+            {
+                return false; // cannot move to a point with opponent's checker
+            }
+
+            if (sourceI == destI && sourceJ == destJ)
+            {
+                return false; // source and destination must be different
+            }
+
+            if (Math.Abs(destI - sourceI) != 1)
+            {
+                return false; // must move one step
+            }
+
+            if (board[destI, destJ].Count > 0 && board[destI, destJ].Peek() != currentTurn)
+            {
+                return false; // cannot move to a point with opponent's checker
+            }
+
+            if (board[destI, destJ].Count == 0 || board[destI, destJ].Peek() == currentTurn)
+            {
+                return true; // can move to an empty point or a point with the player's own checker
+            }
+
+            return false; // otherwise, invalid move
+        }
+
+        private void TurnHandler(int i, int j)
+        {
+            if (_previousI == -1 && _previousJ == -1) // source selection
+            {
+                if (_currentTurn == true && board[i, j].Count > 0)
+                {
+                    _previousI = i;
+                    _previousJ = j;
+                }
+                else if (_currentTurn == false && board[i, j].Count > 0 && !HasWhiteCheckersOnBar() && board[i, j].Peek() == false)
+                {
+                    _previousI = i;
+                    _previousJ = j;
+                }
+            }
+            else // destination selection
+            {
+                if (IsValidMove(_previousI, _previousJ, i, j, _currentTurn))
+                {
+                    if (board[_previousI, _previousJ].Count > 1) // if move is a capture
+                    {
+                        board[(i + _previousI) / 2, (j + _previousJ) / 2].Pop();
+                    }
+                    board[i, j].Push(_currentTurn);
+                    board[_previousI, _previousJ].Pop();
+                    if (IsWinner(_currentTurn))
+                    {
+                        // TODO: display winner message and end game
+                    }
+                    else
+                    {
+                        if (_currentTurn == true)
+                        {
+                            _currentTurn = false;
+                            if (HasBlackCheckersOnBar())
+                            {
+                                _previousI = -1;
+                                _previousJ = -1;
+                                ShowBarMessage();
+                            }
+                            else
+                            {
+                                _previousI = -1;
+                                _previousJ = -1;
+                            }
+                        }
+                        else
+                        {
+                            _currentTurn = true;
+                            if (HasWhiteCheckersOnBar())
+                            {
+                                _previousI = -1;
+                                _previousJ = -1;
+                                ShowBarMessage();
+                            }
+                            else
+                            {
+                                _previousI = -1;
+                                _previousJ = -1;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -516,6 +449,8 @@ namespace Backgammon4
 
 
         }
+      
+      
         public void Draw_Board(Canvas canvas, Stack<bool>[,] board)
         {
             for (int i = 0; i < 2; i++)
@@ -541,6 +476,7 @@ namespace Backgammon4
         }
     }
 }
+
 //public override bool OnTouchEvent (MotionEvent e)
 //{
 //    if (e.Action == MotionEventActions.Down)
